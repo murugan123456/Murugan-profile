@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Gallery - Murugan M</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/Web_Icon.png">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/gallery.css">
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"><span>M</span>urugan M</a>
+        <button class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav nav ml-auto">
+            <li class="nav-item"><a href="index.html#home-section" class="nav-link"><span>Home</span></a></li>
+            <li class="nav-item"><a href="index.html#about-section" class="nav-link"><span>About</span></a></li>
+            <li class="nav-item"><a href="index.html#resume-section" class="nav-link"><span>Resume</span></a></li>
+            <li class="nav-item"><a href="index.html#services-section" class="nav-link"><span>Services</span></a></li>
+            <li class="nav-item"><a href="index.html#projects-section" class="nav-link"><span>Projects</span></a></li>
+            <li class="nav-item active"><a href="gallery.html" class="nav-link"><span>Gallery</span></a></li>
+            <li class="nav-item"><a href="index.html#contact-section" class="nav-link"><span>Contact</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="gallery-section">
+      <div class="container">
+        <h1 class="gallery-title">My Gallery</h1>
+        <div class="row">
+          <!-- Gallery items will be added here by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <img id="modalImage" src="" alt="" class="modal-img">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="ftco-loader" class="show fullscreen">
+      <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/>
+      </svg>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.stellar.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/scrollax.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+      // Sample gallery images (replace with your actual images)
+      const galleryImages = [
+        {
+          src: 'images/PSV_Sympo.jpg',
+          title: 'Technical Symposium @ PSVCET',
+          description: 'Second place in project Expo'
+        },
+        {
+          src: 'images/FreeCodeCamp.png',
+          title: 'FreeCodeCamp.com',
+          description: 'Completed Responsive Web Design Developer Certification'
+        },
+        {
+          src: 'images/HackerRanK_PythonBasic.png',
+          title: 'Hacker Rank',
+          description: 'Passed the Python(Basic) Skill Test'
+        },
+        {
+          src: 'images/HackerRank_ProblemSolving.png',
+          title: 'Hacker Rank',
+          description: 'Passed the Problem Solving(Basic) Skill Test'
+        }
+      ];
+
+      // Function to create gallery items
+      function createGallery() {
+        const galleryContainer = document.querySelector('.gallery-section .row');
+        
+        galleryImages.forEach((item, index) => {
+          const col = document.createElement('div');
+          col.className = 'col-md-4 col-sm-6 mb-4';
+          
+          const galleryItem = document.createElement('div');
+          galleryItem.className = 'gallery-item h-90';
+          
+          const imgContainer = document.createElement('div');
+          imgContainer.className = 'gallery-img-container';
+          
+          const img = document.createElement('img');
+          img.src = item.src;
+          img.alt = item.title;
+          img.className = 'gallery-img';
+          
+          const overlay = document.createElement('div');
+          overlay.className = 'gallery-img-overlay';
+          
+          const title = document.createElement('div');
+          title.className = 'gallery-img-title';
+          title.textContent = item.title;
+          
+          const desc = document.createElement('div');
+          desc.className = 'gallery-img-desc';
+          desc.textContent = item.description;
+          
+          overlay.appendChild(title);
+          overlay.appendChild(desc);
+          
+          imgContainer.appendChild(img);
+          imgContainer.appendChild(overlay);
+          
+          imgContainer.onclick = function() {
+            document.getElementById('modalImage').src = item.src;
+            $('#imageModal').modal('show');
+          };
+          
+          galleryItem.appendChild(imgContainer);
+          col.appendChild(galleryItem);
+          galleryContainer.appendChild(col);
+        });
+      }
+
+      // Initialize gallery when the page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        createGallery();
+      });
+    </script>
+  </body>
+</html>
