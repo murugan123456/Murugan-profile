@@ -1,21 +1,6 @@
- AOS.init({
- 	duration: 800,
- 	easing: 'slide'
- });
-
 (function($) {
 
 	"use strict";
-
-	$(window).stellar({
-    responsive: true,
-    parallaxBackgrounds: true,
-    parallaxElements: true,
-    horizontalScrolling: false,
-    hideDistantElements: false,
-    scrollProperty: 'scroll'
-  });
-
 
 	var fullHeight = function() {
 
@@ -36,11 +21,6 @@
 		}, 1);
 	};
 	loader();
-
-	// Scrollax - initialized but may not be actively used
-   $.Scrollax();
-
-
 
    // Burger Menu
 	var burgerMenu = function() {
@@ -70,12 +50,16 @@
 	    event.preventDefault();
 
 	    var href = $.attr(this, 'href');
+	    var $target = $(href);
 
-	    $('html, body').animate({
-	        scrollTop: $($.attr(this, 'href')).offset().top - 70
-	    }, 500, function() {
-	    	// window.location.hash = href;
-	    });
+	    // Check if target element exists and has offset
+	    if ($target.length && $target.offset()) {
+	        $('html, body').animate({
+	            scrollTop: $target.offset().top - 70
+	        }, 500, function() {
+	        	// window.location.hash = href;
+	        });
+	    }
 		});
 
 	};
@@ -186,9 +170,13 @@
 			
 			event.preventDefault();
 
-			$('html,body').animate({
-				scrollTop: $('.goto-here').offset().top
-			}, 500, 'easeInOutExpo');
+			var $target = $('.goto-here');
+			// Check if target element exists and has offset
+			if ($target.length && $target.offset()) {
+				$('html,body').animate({
+					scrollTop: $target.offset().top
+				}, 500, 'easeInOutExpo');
+			}
 			
 			return false;
 		});
@@ -281,10 +269,15 @@ window.onload = function() {
     //prevent the page from refreshing
     e.preventDefault();
     //set the top offset animation and speed
-    $('html, body').animate({
-      scrollTop: $($(this).attr('href')).offset().top - 180
-},500);
-    hash($(this).attr('href'));
+    var href = $(this).attr('href');
+    var $target = $(href);
+    // Check if target element exists and has offset
+    if ($target.length && $target.offset()) {
+      $('html, body').animate({
+        scrollTop: $target.offset().top - 180
+      }, 500);
+    }
+    hash(href);
   });
   
   
@@ -302,7 +295,8 @@ window.onload = function() {
     for (var i in sections) {
       var section = sections[i];
       //if scrollTop variable is bigger than the top offset of a section in the sections array then 
-      if (scrollTop > section.offset().top){
+      // Check if section exists and has offset before accessing
+      if (section.length && section.offset() && scrollTop > section.offset().top){
         var scrolled_id = section.attr('id');
       }
     }

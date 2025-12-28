@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="icon" type="image/png" href="images/Web_Icon.png">
+    <link rel="icon" type="image/png" href="images/icon.png">
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="css/ionicons.min.css">
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
@@ -47,9 +47,15 @@
     </section>
 
     <!-- Image Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">Gallery Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <div class="modal-body text-center">
             <img id="modalImage" src="" alt="" class="modal-img">
           </div>
@@ -69,15 +75,18 @@
     </div>
 
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.easing.1.3.js"></script>
     <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/aos.js"></script>
     <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/scrollax.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        easing: 'slide'
+      });
+    </script>
     <script src="js/main.js"></script>
     
     <script>
@@ -143,6 +152,8 @@
           
           imgContainer.onclick = function() {
             document.getElementById('modalImage').src = item.src;
+            document.getElementById('modalImage').alt = item.title;
+            document.getElementById('imageModalLabel').textContent = item.title;
             $('#imageModal').modal('show');
           };
           
@@ -155,6 +166,68 @@
       // Initialize gallery when the page loads
       document.addEventListener('DOMContentLoaded', function() {
         createGallery();
+        
+        var $modal = $('#imageModal');
+        var modalElement = $modal[0];
+        
+        // Fix aria-hidden accessibility issue
+        // Remove focus BEFORE modal is hidden to prevent aria-hidden violation
+        $modal.on('hide.bs.modal', function (e) {
+          // Get the currently focused element inside the modal
+          var activeElement = document.activeElement;
+          
+          // Check if the focused element is inside the modal
+          if (modalElement && modalElement.contains(activeElement)) {
+            // Remove focus immediately using native DOM methods
+            if (activeElement && typeof activeElement.blur === 'function') {
+              activeElement.blur();
+            }
+            // Also use jQuery blur as backup
+            $modal.find(':focus').blur();
+            // Move focus to document body (safe fallback)
+            if (document.body && typeof document.body.focus === 'function') {
+              document.body.focus();
+            }
+          }
+        });
+        
+        // Use MutationObserver as a safety net to catch aria-hidden changes
+        if (modalElement && window.MutationObserver) {
+          var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'aria-hidden') {
+                var isHidden = modalElement.getAttribute('aria-hidden') === 'true';
+                if (isHidden) {
+                  // If modal is hidden, ensure no focusable elements inside have focus
+                  var focusedElement = document.activeElement;
+                  if (modalElement.contains(focusedElement)) {
+                    focusedElement.blur();
+                    // Move focus away
+                    if (document.body) {
+                      document.body.focus();
+                    }
+                  }
+                }
+              }
+            });
+          });
+          
+          observer.observe(modalElement, {
+            attributes: true,
+            attributeFilter: ['aria-hidden']
+          });
+        }
+        
+        // Clean up any remaining focus after modal is fully hidden
+        $modal.on('hidden.bs.modal', function () {
+          // Remove focus from any element inside the modal
+          $(this).find('button, [tabindex], a, input, textarea, select').blur();
+        });
+        
+        // Ensure proper aria-hidden management when modal is shown
+        $modal.on('shown.bs.modal', function () {
+          $(this).attr('aria-hidden', 'false');
+        });
       });
     </script>
   </body>
